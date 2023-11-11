@@ -7,7 +7,7 @@ _extramodules=extramodules-6.6-MANJARO
 
 pkgname=$_linuxprefix-nvidia
 pkgdesc="NVIDIA drivers for linux"
-pkgver=535.113.01
+pkgver=535.129.03
 pkgrel=2
 arch=('x86_64')
 url="http://www.nvidia.com/"
@@ -20,7 +20,7 @@ options=(!strip)
 install=nvidia.install
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
 source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('705ea3e47f31d49109f9d48e8057bcffaec0cfae70f62b7636a1d4e1d8cd4e78')
+sha256sums=('ffed07a30323fd6cf9caad3fb45e6259223135f6004d832511921a788f719ba6')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
