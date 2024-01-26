@@ -3,7 +3,7 @@
 # Archlinux maintainer : Thomas Baechler <thomas@archlinux.org>
 
 _linuxprefix=linux66
-_extramodules=extramodules-6.6-MANJARO
+_kernver="$(cat /usr/src/${_linuxprefix}/version)"
 
 pkgname=$_linuxprefix-nvidia
 pkgdesc="NVIDIA drivers for linux"
@@ -17,7 +17,6 @@ depends=("$_linuxprefix" "nvidia-utils=$pkgver")
 makedepends=("$_linuxprefix-headers")
 provides=("nvidia=$pkgver" 'NVIDIA-MODULE')
 options=(!strip)
-install=nvidia.install
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
 source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
 sha256sums=('22ce8f5f617ebf13f75510fc4f47ae307b067cc464ed59852631ba3cf149f26d')
@@ -32,7 +31,6 @@ prepare() {
 }
 
 build() {
-    _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
     cd "${_pkg}"
     make -C kernel SYSSRC=/usr/lib/modules/"${_kernver}/build" module
@@ -40,7 +38,7 @@ build() {
 
 package() {
     cd "${_pkg}"
-    install -Dm 644 kernel/*.ko -t "${pkgdir}/usr/lib/modules/${_extramodules}/"
+    install -Dm 644 kernel/*.ko -t "${pkgdir}/usr/lib/modules/${_kernver}/extramodules/"
 
     # compress each module individually
     find "${pkgdir}" -name '*.ko' -exec xz -T1 {} +
