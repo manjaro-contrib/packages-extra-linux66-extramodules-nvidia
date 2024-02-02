@@ -18,8 +18,9 @@ makedepends=("$_linuxprefix-headers")
 provides=("nvidia=$pkgver" 'NVIDIA-MODULE')
 options=(!strip)
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
-source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('22ce8f5f617ebf13f75510fc4f47ae307b067cc464ed59852631ba3cf149f26d')
+source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run" 'GPL-workaround.patch')
+sha256sums=('22ce8f5f617ebf13f75510fc4f47ae307b067cc464ed59852631ba3cf149f26d'
+            '59958c134261a53edb641ba3c96b13e397d1903ec3637c8be8d61141356292de')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
@@ -27,7 +28,7 @@ prepare() {
     sh "${_pkg}.run" --extract-only
 
     cd "${_pkg}"
-    # patches here
+    patch -p1 -i ../GPL-workaround.patch
 }
 
 build() {
