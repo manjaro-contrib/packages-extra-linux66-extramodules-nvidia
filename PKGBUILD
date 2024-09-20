@@ -6,7 +6,7 @@ _linuxprefix=linux66
 
 pkgname="${_linuxprefix}-nvidia"
 pkgdesc="NVIDIA drivers for linux"
-pkgver=550.107.02
+pkgver=550.120
 pkgrel=1
 arch=('x86_64')
 url="http://www.nvidia.com/"
@@ -18,7 +18,7 @@ provides=("nvidia=${pkgver}" 'NVIDIA-MODULE')
 options=(!strip)
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
 source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('94299354125c6aa1c98fd7f9ebb26a73b6a39205c84b4790888c1949c890b0a3')
+sha256sums=('900c2e78287cf29acb9f884b6a538d57bf1addccaa1a86eb73d226457f786181')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
