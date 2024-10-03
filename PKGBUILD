@@ -7,7 +7,7 @@ _linuxprefix=linux66
 pkgname="${_linuxprefix}-nvidia"
 pkgdesc="NVIDIA drivers for linux"
 pkgver=560.35.03
-pkgrel=8
+pkgrel=9
 arch=('x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
@@ -17,13 +17,23 @@ makedepends=("${_linuxprefix}-headers")
 provides=("nvidia=${pkgver}" 'NVIDIA-MODULE')
 options=(!strip)
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
-source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('7ec3795748cd79ea6f553a6cc0a54385b3c6b9e9b9efdf008a0dbedd7b2471bd')
+source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+        'make-modeset-fbdev-default.patch')
+sha256sums=('7ec3795748cd79ea6f553a6cc0a54385b3c6b9e9b9efdf008a0dbedd7b2471bd'
+            '03e9c10852312cff661380611b201d7bd45d3869b28d57c3614f7a4bb033c59f')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
 prepare() {
     sh "${_pkg}.run" --extract-only
+
+    cd "${_pkg}"
+
+    # Enable modeset and fbdev as default
+    # This avoids various issue, when Simplefb is used
+    # https://gitlab.archlinux.org/archlinux/packaging/packages/nvidia-utils/-/issues/14
+    # https://github.com/rpmfusion/nvidia-kmod/blob/master/make_modeset_default.patch
+    patch -Np1 < "$srcdir"/make-modeset-fbdev-default.patch
 }
 
 build() {
