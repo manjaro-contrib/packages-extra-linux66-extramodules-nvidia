@@ -1,15 +1,18 @@
 # Maintainer: Bernhard Landauer <bernhard@manjaro.org>
 # Maintainer: Philip Müller <philm[at]manjaro[dot]org>
-# Archlinux maintainer : Thomas Baechler <thomas@archlinux.org>
+# Contributor: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Thomas Baechler <thomas@archlinux.org>
 
 _linuxprefix=linux66
 
-pkgname="${_linuxprefix}-nvidia"
-pkgdesc="NVIDIA drivers for linux"
+pkgbase="${_linuxprefix}-nvidia"
+pkgname=("${_linuxprefix}-nvidia" "${_linuxprefix}-nvidia-open")
+pkgdesc="NVIDIA drivers for ${_linuxprefix}"
 pkgver=565.57.01
 pkgrel=6
 arch=('x86_64')
-url="http://www.nvidia.com/"
+url="https://www.nvidia.com/"
 license=('custom')
 groups=("${_linuxprefix}-extramodules")
 depends=("${_linuxprefix}" "nvidia-utils=${pkgver}")
@@ -33,6 +36,7 @@ prepare() {
     # This avoids various issue, when Simplefb is used
     # https://gitlab.archlinux.org/archlinux/packaging/packages/nvidia-utils/-/issues/14
     # https://github.com/rpmfusion/nvidia-kmod/blob/master/make_modeset_default.patch
+    patch -Np1 < "$srcdir"/make-modeset-fbdev-default.patch -d "${srcdir}/${_pkg}/kernel-open"
     patch -Np1 < "$srcdir"/make-modeset-fbdev-default.patch -d "${srcdir}/${_pkg}/kernel"
 }
 
@@ -40,17 +44,34 @@ build() {
     _kernver="$(cat /usr/src/${_linuxprefix}/version)"
 
     cd "${_pkg}"
+    make -C kernel-open SYSSRC=/usr/lib/modules/"${_kernver}/build" module
     make -C kernel SYSSRC=/usr/lib/modules/"${_kernver}/build" module
 }
 
-package() {
+package_linux66-nvidia() {
     _kernver="$(cat /usr/src/${_linuxprefix}/version)"
 
     cd "${_pkg}"
     install -Dm 644 kernel/*.ko -t "${pkgdir}/usr/lib/modules/${_kernver}/extramodules/"
 
     # compress each module individually
-    find "${pkgdir}" -name '*.ko' -exec xz -T1 {} +
+    find "${pkgdir}" -name '*.ko' -exec zstd --rm -19 {} +
+
+    install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_linux66-nvidia-open() {
+    pkgdesc="NVIDIA open drivers for ${_linuxprefix}"
+    provides=("nvidia-open=${pkgver}" 'NVIDIA-MODULE')
+    conflicts=("${_linuxprefix}-nvidia")
+
+    _kernver="$(cat /usr/src/${_linuxprefix}/version)"
+
+    cd "${_pkg}"
+    install -Dm 644 kernel-open/*.ko -t "${pkgdir}/usr/lib/modules/${_kernver}/extramodules/"
+
+    # compress each module individually
+    find "${pkgdir}" -name '*.ko' -exec zstd --rm -19 {} +
 
     install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
