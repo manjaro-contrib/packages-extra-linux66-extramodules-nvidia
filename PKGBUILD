@@ -9,8 +9,8 @@ _linuxprefix=linux66
 pkgbase="${_linuxprefix}-nvidia"
 pkgname=("${_linuxprefix}-nvidia" "${_linuxprefix}-nvidia-open")
 pkgdesc="NVIDIA drivers for ${_linuxprefix}"
-pkgver=565.57.01
-pkgrel=7
+pkgver=565.77
+pkgrel=1
 arch=('x86_64')
 url="https://www.nvidia.com/"
 license=('custom')
@@ -22,7 +22,7 @@ options=(!strip)
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
 source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
         'make-modeset-fbdev-default.patch')
-sha256sums=('9ec280cf6544b59d170064e00c365f329c6f28416eba1497c286f4e0295c27ce'
+sha256sums=('bdf6373649a3abea3355b95b9df2eedb52c97e2e2b2b14e60bf759551a1b5d7c'
             '1850b14877a87083d1800d0e75714347fc8049a0f4ff1e354769f3058e372e1a')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
